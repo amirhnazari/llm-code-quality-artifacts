@@ -1,0 +1,19 @@
+# Pinned to the versions that produced the results in results/ (Python 3.9.6).
+# The thesis cites these version numbers, so pin them rather than float: radon and
+# complexipy have both changed their scoring across releases, and an unpinned
+# install would silently recompute different metrics from the same code.
+
+# --- measurement (the metrics reported in the paper) ---
+radon==6.0.1          # Maintainability Index, cyclomatic complexity, raw LOC, Halstead
+complexipy==5.6.1     # cognitive complexity
+pylint==3.3.9         # linter counts; feedback source, not a primary measure
+
+# --- correctness oracle ---
+evalplus==0.3.1       # MBPP+ task data + augmented test inputs
+
+# --- analysis + figures ---
+scipy==1.13.1         # Wilcoxon signed-rank, McNemar exact (binomtest)
+matplotlib==3.9.4     # the four figures
+
+# Generation goes through the local Ollama HTTP API via urllib -- no SDK needed.
+# Ollama client 0.30.10, model tag qwen2.5-coder:7b (Q4_K_M). See config.json.

@@ -1,0 +1,57 @@
+[
+  {
+    "task_id": "proto-1",
+    "prompt": "Write a Python function `is_prime(n)` that returns True if the integer n is a prime number and False otherwise.",
+    "entry_point": "is_prime",
+    "tests": [
+      "assert is_prime(7) == True",
+      "assert is_prime(8) == False",
+      "assert is_prime(1) == False",
+      "assert is_prime(2) == True",
+      "assert is_prime(13) == True"
+    ]
+  },
+  {
+    "task_id": "proto-2",
+    "prompt": "Write a Python function `count_vowels(s)` that returns the number of vowels (a, e, i, o, u, case-insensitive) in the string s.",
+    "entry_point": "count_vowels",
+    "tests": [
+      "assert count_vowels('hello') == 2",
+      "assert count_vowels('xyz') == 0",
+      "assert count_vowels('AEIOU') == 5",
+      "assert count_vowels('') == 0"
+    ]
+  },
+  {
+    "task_id": "proto-3",
+    "prompt": "Write a Python function `primes_up_to(n)` that returns a list of all prime numbers from 2 up to and including n, in ascending order.",
+    "entry_point": "primes_up_to",
+    "tests": [
+      "assert primes_up_to(10) == [2, 3, 5, 7]",
+      "assert primes_up_to(2) == [2]",
+      "assert primes_up_to(1) == []",
+      "assert primes_up_to(13) == [2, 3, 5, 7, 11, 13]"
+    ]
+  },
+  {
+    "task_id": "proto-4",
+    "prompt": "Write a Python function `fib(n)` that returns the nth Fibonacci number, where fib(0) = 0 and fib(1) = 1.",
+    "entry_point": "fib",
+    "tests": [
+      "assert fib(0) == 0",
+      "assert fib(1) == 1",
+      "assert fib(10) == 55",
+      "assert fib(15) == 610"
+    ]
+  },
+  {
+    "task_id": "proto-5",
+    "prompt": "Write a Python function `word_count(s)` that returns a dictionary mapping each whitespace-separated word in the string s to the number of times it appears.",
+    "entry_point": "word_count",
+    "tests": [
+      "assert word_count('a b a') == {'a': 2, 'b': 1}",
+      "assert word_count('') == {}",
+      "assert word_count('hi hi hi') == {'hi': 3}"
+    ]
+  }
+]

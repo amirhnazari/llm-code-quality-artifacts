@@ -1,0 +1,198 @@
+% ============================================================
+% Paper-style template — empirical CS study
+% Compile: pdfLaTeX + latexmk (configured in .vscode/settings.json)
+% Section content lives in sections/*.tex and is pulled in below.
+% ============================================================
+
+\documentclass[10pt,a4paper,twocolumn]{article}
+
+% === Layout ===
+\usepackage[a4paper,margin=2cm]{geometry}
+\setlength{\columnsep}{6mm}     % gap between the two columns
+\usepackage{setspace}
+\singlespacing                  % single spacing is the norm for paper columns
+
+% === Encoding & font ===
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\usepackage{microtype}
+
+% === Math, figures, tables, code ===
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{siunitx}
+\usepackage{listings}
+\usepackage{upquote}   % straight ` and ' inside listings (the prompt in fig:prompt
+                       % contains markdown code fences; curly quotes would misreport it)
+\usepackage{xcolor}
+
+% === Pipeline flowchart support ===
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,arrows.meta,positioning}
+
+% === Citations: IEEE numeric style ===
+\usepackage[numbers,square,sort&compress]{natbib}
+\bibliographystyle{IEEEtran}
+
+% \bstctlcite ships with IEEEtran.cls, which this paper does not use (article +
+% natbib). This is IEEEtran's documented definition for other classes: it writes
+% the citation straight to the .aux for BibTeX without asking natbib to resolve it,
+% so the control entry reaches the .bst without producing an "undefined citation"
+% warning. Used once below to activate the IEEEtranBSTCTL entry in references.bib.
+% Copied verbatim from IEEEtran.cls (v1.8b, lines 4438-4443).
+\makeatletter
+\def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
+\def\@bstctlcite[#1]#2{\@bsphack
+  \@for\@citeb:=#2\do{%
+    \edef\@citeb{\expandafter\@firstofone\@citeb}%
+    \if@filesw\immediate\write\csname #1\endcsname{\string\citation{\@citeb}}\fi}%
+  \@esphack}
+\makeatother
+
+% === Links (load last) ===
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+% cleveref abbreviates lowercase \cref ("fig. 3") but not \Cref ("Figure 5"), and both
+% forms appear in the text. Pin the full word for both so cross-references read the same
+% everywhere, rather than chasing individual call sites.
+\crefname{figure}{Figure}{Figures}
+\Crefname{figure}{Figure}{Figures}
+\crefname{table}{Table}{Tables}
+\Crefname{table}{Table}{Tables}
+\crefname{section}{Section}{Sections}
+\Crefname{section}{Section}{Sections}
+
+% === Reference-list type size ===
+% Sets BOTH reference lists (References and Tools and Software) one step smaller
+% than the body. This is ordinary IEEE practice for the reference apparatus, and it
+% applies to both lists equally, so they remain typographically identical to each
+% other. Body text, margins and leading are untouched.
+\let\origthebibliography\thebibliography
+\renewcommand{\thebibliography}[1]{\origthebibliography{#1}\small}
+
+% === Code listing style ===
+\lstset{
+  basicstyle=\ttfamily\small,
+  frame=single,
+  breaklines=true,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue!70!black},
+  commentstyle=\color{green!50!black},
+  language=Python,
+  showstringspaces=false
+}
+
+% === Submission date ===
+% Hard-coded, NOT \today: the printed date must match the date signed on the
+% Eidesstattliche Erklaerung and must not change when the file is recompiled.
+% UPDATE THIS to the actual Abgabedatum before submitting.
+\newcommand{\submissiondate}{06.09.2026}
+\newcommand{\submissionplace}{Langen}
+
+% === Custom commands ===
+\newcommand{\keywords}[1]{\par\noindent\textbf{Keywords:} #1}
+
+% ============================================================
+\begin{document}
+
+% Activates the IEEEtranBSTCTL entry in references.bib (disables the repeated-author
+% dash so every reference lists its authors in full). IEEEtran.bst never emits a
+% \bibitem for a control entry, so this adds nothing to the reference list. Must
+% precede the first real citation so the control entry is processed first.
+\bstctlcite{BSTcontrol}
+
+% === Front matter: two unnumbered single-column pages ===
+% 1. Eidesstattliche Erklaerung (print and sign by hand)
+% 2. Deutsche Zusammenfassung -- the supervisor confirmed a German abstract is
+%    required in addition to the English one and does NOT count towards the page
+%    limit, so both pages sit outside the numbering. Body starts at page 1 below.
+\onecolumn
+\pagenumbering{gobble}
+\input{sections/erklaerung}
+\input{sections/zusammenfassung}
+\clearpage
+\pagenumbering{arabic}
+
+% === Title block + abstract span both columns (full page width) ===
+\twocolumn[
+  \begin{@twocolumnfalse}
+  \begin{center}
+    {\LARGE\bfseries Code Quality of LLM-Generated Python Code\par}
+    \vspace{0.1em}
+    {\fontsize{14.5}{17.4}\selectfont\color{black!55} Can Iterative Static-Analysis Feedback Improve Maintainability\\
+    Without Reducing Functional Correctness?\par}
+    \vspace{1.2em}
+    % Document type + Studiengang: required on the title page by the Pruefungsamt.
+    % Programme name taken from the approved Expose ("B.Sc. Computer Science dual
+    % (Informatik dual)"); the German document type is given first because the
+    % examination office is German-language.
+    {\normalsize\itshape Bachelorarbeit \quad\textbar\quad
+     B.Sc.\ Computer Science dual (Informatik dual)\par}
+    \vspace{1.0em}
+    {\large Amirhossein Rahimnazari\par}
+    \vspace{0.4em}
+    {\normalsize Department of Computer Science, Hochschule Darmstadt\par}
+    {\normalsize Matriculation No.\ 1120298\par}
+    \vspace{0.3em}
+    {\small Academic supervisor: Prof.\ Dr.\ Markus D\"ohring \quad\textbar\quad
+     Industry supervisor: Arndt V\"olkle\par}
+    \vspace{0.3em}
+    {\small \submissiondate\par}
+  \end{center}
+  \vspace{1em}
+
+  % === Abstract ===
+  \begin{abstract}
+  \noindent
+  Large language models produce Python that is often functionally correct, yet
+  functional correctness is only one subcharacteristic of software quality and
+  says little about whether the resulting code is easy to understand and maintain.
+  This thesis asks whether iterative static-analysis feedback can improve the
+  maintainability of LLM-generated code without reducing its functional
+  correctness. Using Qwen2.5-Coder-7B-Instruct run locally under a frozen,
+  reproducible protocol (greedy decoding, fixed seed), 63 stratified tasks from
+  the MBPP+ Python benchmark
+  were generated and then refined over up to three feedback iterations in which
+  structural findings (Maintainability Index, cyclomatic complexity and
+  cognitive complexity) were returned to the model as re-prompts. Three loop
+  configurations were compared: two unguarded variants that differ only in
+  whether refactoring may strip comments, and a correctness-guarded variant that
+  rejects and rolls back any refactor breaking the MBPP+ oracle. Cognitive
+  complexity fell significantly in every configuration, a result that survives a
+  Bonferroni correction across the twelve primary tests (three configurations
+  by four outcomes). Functional correctness showed
+  no statistically significant loss, and the guarded variant eliminated correctness
+  regressions by construction. The Maintainability Index declined to a
+  similar degree whether comments were stripped or preserved. That decline is
+  traceable to its non-monotonic comment term rather than to any loss of structural
+  quality, which makes the Index an unsuitable outcome metric here. The findings indicate that static-analysis
+  feedback can
+  measurably reduce structural complexity, and that a lightweight correctness
+  gate makes the technique safe to apply in this setting.
+  \par\vspace{0.6em}
+  \keywords{LLM code generation, software maintainability, cognitive complexity, static analysis, feedback loop, MBPP}
+  \end{abstract}
+  \vspace{1.5em}
+  \end{@twocolumnfalse}
+]
+
+% === Sections (each lives in its own file under sections/) ===
+\input{sections/introduction}
+\input{sections/related-work}
+\input{sections/methodology}
+\input{sections/evaluation}
+\input{sections/limitations}
+\input{sections/conclusion}
+\input{sections/ai-declaration}
+% === References ===
+\bibliography{references}
+
+% Separate tool/software list -- see sections/tools.tex for why it is hand-rendered.
+\input{sections/tools}
+
+\end{document}

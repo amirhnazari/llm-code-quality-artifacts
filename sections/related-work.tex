@@ -1,0 +1,109 @@
+% !TeX root = ../paper.tex
+
+\section{Background and Related Work}
+\label{sec:related}
+
+% NOTE (kept deliberately short): the supervisor asked for less weight on the
+% background and more on the own contribution. Cite each source at its first
+% mention. Replace every % TODO with your own synthesis before submission.
+
+\subsection{Software Quality and ISO/IEC 25010}
+% NOTE: only the free ISO/IEC 25010:2023 preview (Scope + functional-suitability
+% definitions) is accessible --- the full text is paywalled. Cite iso25010 ONLY
+% for the high-level model framing below (all verifiable from the preview Scope).
+% The maintainability definition/sub-dimensions are NOT verifiable from ISO here,
+% so they are sourced to Heitlager et al. (peer-reviewed, freely available)
+% and/or an SE textbook instead.
+This work frames software quality per ISO/IEC~25010, which models product quality
+as nine characteristics used to specify, measure, and evaluate quality, with
+functional correctness being only one subcharacteristic~\citep{iso25010}.
+Maintainability is the characteristic of interest here: functional correctness is
+necessary but does not, on its own, guarantee that code is easy to understand and
+change. Heitlager et al.~\citep{heitlager2007maintainability} argue that
+maintainability should be estimated from measures computed directly on the source
+code, and document a series of limitations of the Maintainability Index in that
+role. This study shares their emphasis on directly measurable source-code
+properties, but operationalizes maintainability through the Maintainability Index,
+cyclomatic complexity, and cognitive complexity rather than through their SIG
+model. The Index is retained deliberately despite their critique: how it behaves
+under a feedback loop of this kind is itself one of the questions this study
+answers (\cref{sec:results}).
+
+\subsection{Maintainability and Complexity Metrics}
+Three structural metrics form the primary measurement basis of this study.
+The \emph{Maintainability Index} (MI) combines several base measures---Halstead
+volume, cyclomatic complexity, lines of code, and comment density---into a
+single composite score~\citep{coleman1994maintainability}. The implementation
+used here, \texttt{radon}~6.0.1, applies a normalized 0--100 derivative of that
+formula~\citep{radon_docs}. Because the Index is a
+composite, a change in it can originate in any of
+these inputs, which limits its value as a standalone signal and is why the
+underlying components are also reported separately in this study
+(\cref{sec:supp}). \emph{Cyclomatic complexity} (CC) counts the
+independent paths through a unit of code~\citep{mccabe1976complexity}.
+\emph{Cognitive complexity} is a separate metric introduced to address CC's
+shortcomings as a measure of understandability: it adds an increment wherever the
+code's linear reading order is interrupted, and a further increment for each
+level at which such a structure is nested~\citep{cognitivecomplexity}.
+
+This same combination---the Maintainability Index, cyclomatic complexity, cognitive
+complexity, Halstead metrics, and lines of code, produced by \texttt{radon} and
+\texttt{complexipy}~\citep{complexipy_tool}---has been applied in recent empirical work comparing the code
+quality of LLM-generated and human-written Python
+programs~\citep{jamil2025llmquality}, providing a relevant empirical precedent for
+its use here. A recent multi-dimensional
+study of five commercial LLM code-generation tools across five programming languages
+shows how such metrics are applied in practice: it
+scores generated code on functional correctness, reliability, maintainability, and
+complexity, and reports that code smells are pervasive and that some outputs reach
+excessive cyclomatic complexity~\citep{li2026multidim}. There, as in the work
+discussed below, the metrics assess
+code after it has been generated rather than guiding the generation itself.
+
+To capture additional structural and size effects, three supplementary measures
+are reported alongside the primary trio: \emph{Halstead volume/effort},
+\emph{lines of code} (LOC), and \emph{linter issue counts} (Pylint
+refactor/warning/convention)~\citep{pylint_tool}. These are produced by the same tooling at no
+additional measurement cost (see \cref{sec:method}). LOC is reported in
+particular because the MI incorporates code volume through two separate volume
+measures, Halstead volume and lines of code, an ingredient Heitlager et al.\
+criticize as lacking any logical
+justification~\citep{heitlager2007maintainability}; reporting LOC separately lets
+a reader confirm that MI changes are not merely an artifact of code length.
+
+\subsection{LLM Code Generation and Benchmarks}
+The MBPP benchmark provides short, self-contained Python programming tasks with
+associated tests~\citep{austin2021mbpp}. Together with HumanEval it is, as Blyth
+et al.\ observe, a standard benchmark for assessing LLM-generated
+code~\citep{blyth2025scam}. This study draws its tasks from the sanitized
+subset of MBPP and scores them with MBPP+, the test-augmented variant released
+with the EvalPlus tool~\citep{evalplus_tool} (\cref{sec:taskset}).
+
+\subsection{Research Gap}
+Blyth et al.~\citep{blyth2025scam} demonstrate that iterative static-analysis
+feedback, using Bandit and Pylint reports as prompts, substantially reduces
+security, readability, and reliability violations in GPT-4o-generated Python code.
+Their loop includes a fitness-based correctness gate ($f(S)=-\infty$ for
+test-failing snippets), so passing code cannot be replaced by failing code, and they
+report an increase of roughly ten percentage points in the proportion of
+functionally correct snippets across the iterations. Their
+evaluation measures quality through severity-weighted linter issue counts,
+however; structural complexity metrics such as the Maintainability Index,
+cyclomatic complexity, and cognitive complexity appear nowhere in their evaluation. A
+complementary line of work uses execution results and unit-test outcomes as the
+feedback signal~\citep{chen2024selfdebug}; structural quality metrics are not part
+of that loop. A further line makes
+generation itself quality-aware: ARCHCODE conditions code generation on inferred
+functional and non-functional requirements---the latter including maintainability,
+robustness, and time and space performance---and ranks candidate solutions by their
+compliance with those requirements~\citep{han2024archcode}. This intervenes at
+generation time through requirement conditioning rather than by feeding measured
+structural metrics back into an iterative loop. ARCHCODE does operationalize
+maintainability as a cyclomatic-complexity threshold, checked with the same
+\texttt{radon} library used here, but it applies that threshold as a pass/fail
+filter over candidate solutions rather than reporting continuous complexity
+values as evaluation outcomes, and it considers neither the Maintainability Index
+nor cognitive complexity~\citep{han2024archcode}. The study presented
+here examines the question these lines leave open: does static-analysis feedback
+produce measurable changes in structural complexity metrics on a general
+programming benchmark under a frozen, reproducible protocol?

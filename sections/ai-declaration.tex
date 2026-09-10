@@ -1,0 +1,28 @@
+% !TeX root = ../paper.tex
+
+% No \label here: this is an unnumbered \section*, so a \label would attach to the
+% last stepped counter (the Conclusion, section 6) and any future \cref to it would
+% silently point at the wrong section. Nothing references it, so the label is dropped
+% rather than forced with \phantomsection --- an unnumbered section has no number
+% worth cross-referencing.
+\section*{Declaration on the Use of AI Tools}
+
+The use of AI tools is permitted and documented for this work. Because this study
+takes an LLM as its subject, two distinct roles are separated below.
+
+\paragraph{As the object of study.} Qwen2.5-Coder-7B-Instruct generates and
+refactors the Python solutions that this study measures. This is the experiment
+itself rather than authoring assistance; the model, its quantization, and the
+sampling parameters are specified in \cref{sec:method}.
+
+\paragraph{As authoring assistance.} AI assistance was used for drafting and
+revising prose, generating and refactoring the experiment and analysis code in
+\texttt{Project/src}, producing \LaTeX{} for tables and the pipeline figure, and
+literature search.
+
+\paragraph{Not AI-generated.} The research question, the experimental design, the
+hypotheses, and the conclusions are the author's own. All reported measurements
+and statistics were computed by the analysis pipeline from the archived artifacts
+(\cref{sec:artifacts}) rather than produced by an AI tool. Every AI-assisted
+passage and every line of code was reviewed and verified by the author, who takes
+full responsibility for the content of this work.

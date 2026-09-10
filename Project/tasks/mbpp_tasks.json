@@ -1,0 +1,506 @@
+[
+  {
+    "task_id": "Mbpp/3",
+    "entry_point": "is_not_prime",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 8,
+    "ref_mi": 68.7
+  },
+  {
+    "task_id": "Mbpp/9",
+    "entry_point": "find_Rotations",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 7,
+    "ref_mi": 70.3
+  },
+  {
+    "task_id": "Mbpp/20",
+    "entry_point": "is_woodall",
+    "stratum": "higher",
+    "ref_cc": 7,
+    "ref_loc": 15,
+    "ref_mi": 58.3
+  },
+  {
+    "task_id": "Mbpp/65",
+    "entry_point": "recursive_list_sum",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 8,
+    "ref_mi": 70.1
+  },
+  {
+    "task_id": "Mbpp/67",
+    "entry_point": "bell_number",
+    "stratum": "higher",
+    "ref_cc": 5,
+    "ref_loc": 8,
+    "ref_mi": 65.9
+  },
+  {
+    "task_id": "Mbpp/71",
+    "entry_point": "comb_sort",
+    "stratum": "higher",
+    "ref_cc": 6,
+    "ref_loc": 15,
+    "ref_mi": 59.4
+  },
+  {
+    "task_id": "Mbpp/74",
+    "entry_point": "is_samepatterns",
+    "stratum": "higher",
+    "ref_cc": 5,
+    "ref_loc": 7,
+    "ref_mi": 71.3
+  },
+  {
+    "task_id": "Mbpp/84",
+    "entry_point": "sequence",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 8,
+    "ref_mi": 65.2
+  },
+  {
+    "task_id": "Mbpp/92",
+    "entry_point": "is_undulating",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 5,
+    "ref_mi": 74.5
+  },
+  {
+    "task_id": "Mbpp/100",
+    "entry_point": "next_smallest_palindrome",
+    "stratum": "higher",
+    "ref_cc": 13,
+    "ref_loc": 37,
+    "ref_mi": 63.9
+  },
+  {
+    "task_id": "Mbpp/103",
+    "entry_point": "eulerian_num",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 6,
+    "ref_mi": 67.2
+  },
+  {
+    "task_id": "Mbpp/109",
+    "entry_point": "odd_Equivalent",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 6,
+    "ref_mi": 74.3
+  },
+  {
+    "task_id": "Mbpp/113",
+    "entry_point": "check_integer",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 8,
+    "ref_mi": 70.4
+  },
+  {
+    "task_id": "Mbpp/123",
+    "entry_point": "amicable_numbers_sum",
+    "stratum": "higher",
+    "ref_cc": 9,
+    "ref_loc": 21,
+    "ref_mi": 53.8
+  },
+  {
+    "task_id": "Mbpp/125",
+    "entry_point": "find_length",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 9,
+    "ref_mi": 67.7
+  },
+  {
+    "task_id": "Mbpp/126",
+    "entry_point": "sum",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 11,
+    "ref_mi": 63.0
+  },
+  {
+    "task_id": "Mbpp/129",
+    "entry_point": "magic_square_test",
+    "stratum": "higher",
+    "ref_cc": 10,
+    "ref_loc": 11,
+    "ref_mi": 91.1
+  },
+  {
+    "task_id": "Mbpp/160",
+    "entry_point": "find_solution",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 7,
+    "ref_mi": 66.4
+  },
+  {
+    "task_id": "Mbpp/167",
+    "entry_point": "next_power_of_2",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 8,
+    "ref_mi": 66.6
+  },
+  {
+    "task_id": "Mbpp/239",
+    "entry_point": "get_total_number_of_sequences",
+    "stratum": "higher",
+    "ref_cc": 9,
+    "ref_loc": 13,
+    "ref_mi": 59.1
+  },
+  {
+    "task_id": "Mbpp/245",
+    "entry_point": "max_sum",
+    "stratum": "higher",
+    "ref_cc": 10,
+    "ref_loc": 15,
+    "ref_mi": 54.7
+  },
+  {
+    "task_id": "Mbpp/247",
+    "entry_point": "lps",
+    "stratum": "higher",
+    "ref_cc": 5,
+    "ref_loc": 11,
+    "ref_mi": 61.8
+  },
+  {
+    "task_id": "Mbpp/260",
+    "entry_point": "newman_prime",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 11,
+    "ref_mi": 64.0
+  },
+  {
+    "task_id": "Mbpp/278",
+    "entry_point": "count_first_elements",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 5,
+    "ref_mi": 100.0
+  },
+  {
+    "task_id": "Mbpp/296",
+    "entry_point": "get_Inv_Count",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 7,
+    "ref_mi": 91.8
+  },
+  {
+    "task_id": "Mbpp/297",
+    "entry_point": "flatten_list",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 8,
+    "ref_mi": 100.0
+  },
+  {
+    "task_id": "Mbpp/301",
+    "entry_point": "dict_depth",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 6,
+    "ref_mi": 77.9
+  },
+  {
+    "task_id": "Mbpp/305",
+    "entry_point": "start_withp",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 6,
+    "ref_mi": 100.0
+  },
+  {
+    "task_id": "Mbpp/306",
+    "entry_point": "max_sum_increasing_subseq",
+    "stratum": "higher",
+    "ref_cc": 10,
+    "ref_loc": 17,
+    "ref_mi": 56.2
+  },
+  {
+    "task_id": "Mbpp/311",
+    "entry_point": "set_left_most_unset_bit",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 10,
+    "ref_mi": 63.7
+  },
+  {
+    "task_id": "Mbpp/389",
+    "entry_point": "find_lucas",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 6,
+    "ref_mi": 70.9
+  },
+  {
+    "task_id": "Mbpp/395",
+    "entry_point": "first_non_repeating_character",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 5,
+    "ref_mi": 79.6
+  },
+  {
+    "task_id": "Mbpp/428",
+    "entry_point": "shell_sort",
+    "stratum": "higher",
+    "ref_cc": 5,
+    "ref_loc": 12,
+    "ref_mi": 61.7
+  },
+  {
+    "task_id": "Mbpp/448",
+    "entry_point": "cal_sum",
+    "stratum": "higher",
+    "ref_cc": 5,
+    "ref_loc": 19,
+    "ref_mi": 58.3
+  },
+  {
+    "task_id": "Mbpp/453",
+    "entry_point": "sumofFactors",
+    "stratum": "higher",
+    "ref_cc": 5,
+    "ref_loc": 5,
+    "ref_mi": 70.3
+  },
+  {
+    "task_id": "Mbpp/462",
+    "entry_point": "combinations_list",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 7,
+    "ref_mi": 71.1
+  },
+  {
+    "task_id": "Mbpp/468",
+    "entry_point": "max_product",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 13,
+    "ref_mi": 78.4
+  },
+  {
+    "task_id": "Mbpp/556",
+    "entry_point": "find_Odd_Pair",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 7,
+    "ref_mi": 68.8
+  },
+  {
+    "task_id": "Mbpp/559",
+    "entry_point": "max_sub_array_sum",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 10,
+    "ref_mi": 68.1
+  },
+  {
+    "task_id": "Mbpp/564",
+    "entry_point": "count_Pairs",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 7,
+    "ref_mi": 71.2
+  },
+  {
+    "task_id": "Mbpp/576",
+    "entry_point": "is_Sub_Array",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 10,
+    "ref_mi": 63.9
+  },
+  {
+    "task_id": "Mbpp/577",
+    "entry_point": "last_Digit_Factorial",
+    "stratum": "higher",
+    "ref_cc": 5,
+    "ref_loc": 11,
+    "ref_mi": 65.9
+  },
+  {
+    "task_id": "Mbpp/580",
+    "entry_point": "extract_even",
+    "stratum": "higher",
+    "ref_cc": 5,
+    "ref_loc": 10,
+    "ref_mi": 66.4
+  },
+  {
+    "task_id": "Mbpp/583",
+    "entry_point": "catalan_number",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 7,
+    "ref_mi": 69.0
+  },
+  {
+    "task_id": "Mbpp/589",
+    "entry_point": "perfect_squares",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 9,
+    "ref_mi": 67.0
+  },
+  {
+    "task_id": "Mbpp/592",
+    "entry_point": "sum_Of_product",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 9,
+    "ref_mi": 83.7
+  },
+  {
+    "task_id": "Mbpp/602",
+    "entry_point": "first_repeated_char",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 5,
+    "ref_mi": 76.3
+  },
+  {
+    "task_id": "Mbpp/603",
+    "entry_point": "get_ludic",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 13,
+    "ref_mi": 62.0
+  },
+  {
+    "task_id": "Mbpp/605",
+    "entry_point": "prime_num",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 8,
+    "ref_mi": 68.6
+  },
+  {
+    "task_id": "Mbpp/608",
+    "entry_point": "bell_Number",
+    "stratum": "higher",
+    "ref_cc": 5,
+    "ref_loc": 8,
+    "ref_mi": 65.9
+  },
+  {
+    "task_id": "Mbpp/620",
+    "entry_point": "largest_subset",
+    "stratum": "higher",
+    "ref_cc": 6,
+    "ref_loc": 11,
+    "ref_mi": 61.6
+  },
+  {
+    "task_id": "Mbpp/622",
+    "entry_point": "get_median",
+    "stratum": "higher",
+    "ref_cc": 5,
+    "ref_loc": 25,
+    "ref_mi": 53.8
+  },
+  {
+    "task_id": "Mbpp/630",
+    "entry_point": "get_coordinates",
+    "stratum": "higher",
+    "ref_cc": 5,
+    "ref_loc": 8,
+    "ref_mi": 68.8
+  },
+  {
+    "task_id": "Mbpp/633",
+    "entry_point": "pair_xor_Sum",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 6,
+    "ref_mi": 72.6
+  },
+  {
+    "task_id": "Mbpp/721",
+    "entry_point": "maxAverageOfPath",
+    "stratum": "higher",
+    "ref_cc": 7,
+    "ref_loc": 12,
+    "ref_mi": 76.3
+  },
+  {
+    "task_id": "Mbpp/733",
+    "entry_point": "find_first_occurrence",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 13,
+    "ref_mi": 60.6
+  },
+  {
+    "task_id": "Mbpp/751",
+    "entry_point": "check_min_heap",
+    "stratum": "higher",
+    "ref_cc": 7,
+    "ref_loc": 10,
+    "ref_mi": 62.1
+  },
+  {
+    "task_id": "Mbpp/763",
+    "entry_point": "find_min_diff",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 7,
+    "ref_mi": 67.8
+  },
+  {
+    "task_id": "Mbpp/767",
+    "entry_point": "get_pairs_count",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 7,
+    "ref_mi": 68.6
+  },
+  {
+    "task_id": "Mbpp/771",
+    "entry_point": "check_expression",
+    "stratum": "higher",
+    "ref_cc": 17,
+    "ref_loc": 15,
+    "ref_mi": 53.9
+  },
+  {
+    "task_id": "Mbpp/781",
+    "entry_point": "count_divisors",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 10,
+    "ref_mi": 63.6
+  },
+  {
+    "task_id": "Mbpp/801",
+    "entry_point": "test_three_equal",
+    "stratum": "lower",
+    "ref_cc": 3,
+    "ref_loc": 8,
+    "ref_mi": 71.9
+  },
+  {
+    "task_id": "Mbpp/806",
+    "entry_point": "max_run_uppercase",
+    "stratum": "lower",
+    "ref_cc": 4,
+    "ref_loc": 12,
+    "ref_mi": 67.9
+  }
+]

@@ -1,0 +1,51 @@
+% !TeX root = ../paper.tex
+%
+% Deutsche Zusammenfassung -- German-language abstract.
+%
+% REQUIRED: the supervisor confirmed by email (Sep 2026) that a German abstract is
+% needed IN ADDITION to the English one, and that it does NOT count towards the
+% page limit. It therefore sits on its own unnumbered page, before the title block,
+% and page numbering starts at 1 on the body page that follows.
+%
+% This is a faithful translation of the English abstract in paper.tex, not a
+% separate text. IF THE ENGLISH ABSTRACT CHANGES, CHANGE THIS TOO -- the two must
+% not drift apart. Metric names are kept in their established forms
+% ("Maintainability Index" is used untranslated in German SE writing; cyclomatic
+% and cognitive complexity have standard German equivalents).
+
+\thispagestyle{empty}
+
+\section*{Zusammenfassung}
+
+\noindent
+Große Sprachmodelle erzeugen Python-Code, der häufig funktional korrekt ist.
+Funktionale Korrektheit ist jedoch nur eine Teileigenschaft von Softwarequalität
+und sagt wenig darüber aus, ob der erzeugte Code verständlich und wartbar ist. Die
+vorliegende Arbeit untersucht, ob iteratives Feedback aus statischer Analyse die
+Wartbarkeit von LLM-generiertem Python-Code verbessern kann, ohne dessen
+funktionale Korrektheit zu verringern. Mit Qwen2.5-Coder-7B-Instruct, lokal unter
+einem eingefrorenen, reproduzierbaren Protokoll ausgeführt (Greedy Decoding,
+fester Seed), wurden 63 stratifizierte Aufgaben des MBPP+-Benchmarks generiert und
+anschließend über bis zu drei Feedback-Iterationen verfeinert, in denen
+strukturelle Messwerte (Maintainability Index, zyklomatische und kognitive
+Komplexität) als erneute Prompts an das Modell zurückgegeben wurden. Verglichen
+wurden drei Konfigurationen der Schleife: zwei Varianten ohne korrektheitsbasiertes
+Zurücksetzen, die sich allein darin unterscheiden, ob beim Refactoring Kommentare
+entfernt werden dürfen, sowie eine Variante, die jedes Refactoring
+verwirft und zurücksetzt, das das MBPP+-Orakel verletzt. Die kognitive Komplexität
+sank in jeder Konfiguration signifikant, und dieses Ergebnis hält einer
+Bonferroni-Korrektur über die zwölf primären Tests (drei Konfigurationen mal vier
+Zielgrößen) stand. Die funktionale
+Korrektheit zeigte dabei keinen statistisch signifikanten Verlust; die zurücksetzende Variante schließt
+Korrektheitsregressionen konstruktionsbedingt aus. Der
+Maintainability Index sank in ähnlichem Maße, unabhängig davon, ob Kommentare
+entfernt oder erhalten wurden. Dieser Rückgang ist auf seinen nicht-monotonen
+Kommentarterm zurückzuführen und nicht auf einen Verlust struktureller Qualität,
+was den Index hier als Ergebnismetrik ungeeignet macht. Die Ergebnisse
+zeigen, dass Feedback aus statischer Analyse strukturelle Komplexität messbar
+reduzieren kann und dass eine schlanke Korrektheitsprüfung das Verfahren in diesem
+Rahmen sicher anwendbar macht.
+
+\vspace{0.8em}
+\noindent\textbf{Schlagwörter:} LLM-Codegenerierung, Software-Wartbarkeit,
+kognitive Komplexität, statische Analyse, Feedback-Schleife, MBPP

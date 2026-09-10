@@ -1,0 +1,70 @@
+% !TeX root = ../paper.tex
+
+\section{Introduction}
+\label{sec:intro}
+
+Modern Large Language Models (LLMs) can generate source code from
+natural-language descriptions and software requirements~\citep{han2024archcode}.
+However, functional correctness alone is not sufficient for industrial software.
+ISO/IEC~25010 treats functional correctness as only one subcharacteristic within
+a broader product quality model used to specify, measure, and evaluate software
+quality~\citep{iso25010}. A program can therefore pass functional tests and
+still be poorly structured, creating technical debt.
+
+\subsection{Problem Statement}
+A prominent line of feedback-based approaches for LLM code generation and repair
+relies on execution-derived signals, such as failed tests and runtime
+errors, to guide iterative refinement~\citep{chen2024selfdebug}.
+A recent multi-dimensional evaluation, by contrast, applies structural quality
+indicators such as maintainability and complexity to code that has already been
+generated~\citep{li2026multidim},
+rather than using them as a feedback signal during generation. This leaves open whether feeding
+such structural metrics back into the generation loop can improve the
+maintainability of LLM-generated Python code without reducing its functional
+correctness.
+
+\subsection{Research Question}
+Can iterative static analysis, used as feedback, improve the maintainability of
+LLM-generated Python code without reducing its functional correctness?
+
+\noindent The following sub-questions refine this:
+\begin{itemize}
+  \item What maintainability values do LLM-generated Python solutions reach in a
+    baseline condition without feedback?
+  \item How do the Maintainability Index~\citep{coleman1994maintainability} and
+    complexity metrics change after up
+    to three static-analysis feedback iterations?
+  \item Does the functional correctness of the solutions change as a result of
+    the feedback iterations?
+  \item What is the explanatory power of the chosen metrics for this
+    investigation?
+\end{itemize}
+
+\subsection{Objectives and Hypotheses}
+The objective is the design, implementation, and evaluation of a reproducible
+experiment for the quality assessment of LLM-generated Python code.
+\begin{description}
+  \item[H1] Iterative static-analysis feedback increases the aggregate
+    Maintainability Index relative to a no-feedback baseline.
+  \item[H2] Iterative static-analysis feedback reduces structural complexity,
+    measured directly by cyclomatic complexity and cognitive complexity.
+  \item[H3] Functional correctness is preserved under the feedback iterations; it
+    does not significantly decrease relative to the baseline.
+\end{description}
+
+\noindent H1 and H2 are related but tested at different levels: the Maintainability
+Index~\citep{coleman1994maintainability} is an aggregate score that already
+incorporates complexity and code size, whereas H2 targets the structural
+complexity metrics directly---cyclomatic complexity~\citep{mccabe1976complexity}
+and cognitive complexity~\citep{cognitivecomplexity}. The individual MI
+inputs---Halstead volume, lines of code, and comment density---are examined
+descriptively alongside the results (\cref{sec:supp}) rather than promoted to
+separate hypotheses, consistent with treating the aggregate Index as a secondary
+outcome.
+
+\subsection{Structure of the Paper}
+\Cref{sec:related} reviews software-quality metrics and prior work.
+\Cref{sec:method} describes the experimental design and feedback pipeline.
+\Cref{sec:results} reports and discusses the results by hypothesis.
+\Cref{sec:limitations} states the study's limitations and the future work they
+suggest. \Cref{sec:conclusion} concludes.

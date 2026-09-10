@@ -1,0 +1,170 @@
+% !TeX root = ../paper.tex
+
+\section{Limitations and Future Work}
+\label{sec:limitations}
+
+The findings hold under a specific set of choices. This section states the most
+consequential of those bounds, grouped by the kind of validity each threatens. Two of these, the unsuitability of the Maintainability
+Index and the limited power of the correctness test, are load-bearing enough that the conclusions are already phrased
+around them.
+
+\subsection{Construct Validity: Does the Measurement Capture Maintainability?}
+
+\paragraph{The Maintainability Index.} Beyond the validity critique already
+discussed~\citep{heitlager2007maintainability}, the Index proved in this study
+uninformative rather than misleading: it moved almost identically across
+configurations, whether or not comments were stripped, because its comment term
+dominates the score at this code size, so it did not usefully discriminate between
+the loop's outputs. A comment-normalized or volume-controlled measure would be a more
+informative outcome metric.
+
+\paragraph{Tool-specific operationalization.} Each metric is defined here by the
+tool that computed it: the Index is \texttt{radon}'s normalized 0--100 derivative
+rather than Coleman et al.'s unbounded
+polynomial~\citep{coleman1994maintainability,radon_docs}, and cognitive complexity
+is \texttt{complexipy}'s implementation of Campbell's
+specification~\citep{cognitivecomplexity,complexipy_tool}. Both tools are pinned to the
+versions used, so that a replication measures with the same implementation. The
+results are therefore statements about these operationalizations rather than about
+the constructs in the abstract.
+
+\paragraph{Metric-level, not human, maintainability.} Maintainability is assessed
+only through static metrics; perceived readability and human effort were not
+measured. The Pylint counts are weaker still, being the loop's own feedback source
+(\cref{sec:supp}), and no claim here rests on them; the model is shown its complexity
+totals but is never given the Maintainability Index as a target, and the
+cognitive-complexity result is a measured consequence of the refactoring instruction
+rather than a restatement of it.
+
+\subsection{Internal Validity: Could the Effect Have Another Cause?}
+
+\paragraph{Code size as an alternative explanation.} The obvious rival explanation
+is that the code simply became shorter; the supplementary measures argue against
+it (\cref{sec:supp}), as the loop restructures control flow rather than shrinking
+programs.
+
+\paragraph{A single feedback prompt.} The prompt wording was not varied
+systematically: the only variation tested was comment handling, whose effect on the
+Index was not significant ($p=.13$). The study therefore provides no evidence about
+sensitivity to the rest of the phrasing---which findings are shown, in what order,
+and how forcefully.
+
+\paragraph{Two factors inside the correctness gate.} The guarded configuration
+changes two things at once: it rolls back a failing refactor, and it tells the model
+its change altered behavior. The zero-regression guarantee follows from the rollback
+alone, but the gate's effect on the complexity results cannot be attributed to
+either factor separately; separating them would need a third condition that rolls
+back silently.
+
+\paragraph{Limits of the correctness oracle.} MBPP+ inputs are generated
+automatically, so passing the oracle establishes agreement with the reference
+solution on the tested inputs rather than correctness in general; a refactor that
+breaks behavior only on an untested input would be recorded as correct. The oracle
+also treats a timeout as a failure, which is the desired behavior for a
+non-terminating refactor but means a genuinely slow solution could be scored the
+same way. Neither limitation is specific to this study---it is inherited from the
+benchmark---but both bound how strong ``still correct'' is as a claim.
+
+\paragraph{The iteration cap.} The cap of three was fixed in advance as a budget,
+not derived from a power analysis. The trajectory analysis
+(\cref{sec:trajectory}) later showed it was not binding for most tasks, but that is
+a post-hoc justification and does not establish that a larger budget would change
+nothing.
+
+\subsection{External Validity: How Far Does This Generalize?}
+
+\paragraph{Scope of the sample.} The study uses a single model
+(Qwen2.5-Coder-7B-Instruct) at a single fixed seed, on 63 short benchmark tasks
+(23 in the higher-complexity stratum). Short, self-contained tasks have limited
+explanatory power for large software systems, so all claims are scoped strictly to
+this experimental setting. Whether the cognitive-complexity effect generalizes to
+other model families and sizes was not tested and is left to future work.
+
+\paragraph{One decoding configuration and one quantization.} Generation used greedy
+decoding at temperature~0 and the Q4\_K\_M quantization throughout. Both were chosen
+for reproducibility, and both plausibly matter: quantization may affect output
+quality, and sampling at a higher temperature would introduce the run-to-run
+variation that temperature~0 deliberately removes. Neither was varied, so the
+results describe one point in that space.
+
+\paragraph{Model identity.} An Ollama tag names a model rather than fixing its
+content. The digests of the weights used are recorded (\cref{sec:method}) so a
+replication can check them, but they were read back after the fact, and the evidence
+that one set of weights served all five runs is timestamp-based.
+
+\subsection{Statistical Conclusion Validity}
+
+\paragraph{Power and multiplicity.} A family of twelve tests is
+reported (the three primary metrics and the correctness test, each across the
+three configurations). To control the family-wise error rate, a Bonferroni
+correction is applied, giving an adjusted threshold of
+$\alpha^\ast = 0.05/12 = 0.00417$. The cognitive-complexity reductions and the
+Maintainability-Index movements remain significant under this correction in every
+configuration; only the weaker cyclomatic-complexity results in the guarded and
+comment-preserving loops fall away. Bonferroni controls the family-wise error rate
+at $\alpha = 0.05$ regardless of the dependence among the tests. Several outcomes
+here are computed from the same tasks and the configurations share a common
+baseline, so the tests are not independent; the correction may consequently be
+conservative, although the degree of that conservatism is not quantified here. A
+step-down (Holm) correction~\citep{holm1979} rejects the
+same set. The
+code-blind ablation (\cref{sec:blind}) is kept in a separate secondary family of
+eight tests with its own threshold ($\alpha^\ast = 0.05/8 = 0.00625$), under
+which both code-blind cognitive-complexity reductions survive; were the two
+families instead pooled into a single set of twenty tests
+($\alpha^\ast = 0.05/20 = 0.0025$), the guarded code-blind result ($p=.005$) and the
+comment-stripping cyclomatic-complexity result ($p=.0036$) would both cease to be significant; the unguarded code-blind result ($p<.001$)
+would still clear it, and the cognitive-complexity and Maintainability-Index
+conclusions for the three primary configurations are unchanged. The per-stratum
+analyses are treated as secondary and exploratory. Independently, with 63 tasks
+and only a handful of discordant pairs the correctness (McNemar) test has low
+power, so the non-significant downward trend of the unguarded loop should not be
+over-interpreted.
+
+\subsection{Reproducibility and Artifact Availability}
+\label{sec:repro}
+
+\paragraph{What is reproducible, and how exactly.} As set out in
+\cref{sec:artifacts}, recomputation and re-running are different claims. All 1260
+retained solutions re-measure to their recorded values, so each figure traces to a
+specific artifact and the statistics can be re-derived offline. Re-running
+generation is weaker: the baseline is byte-identical across configurations, but a
+multi-step trajectory can diverge once any intermediate iteration differs. The
+quantities above are therefore measurements of a single archived run per
+configuration, not constants a fresh execution will reproduce digit for digit.
+
+\paragraph{An incident that shaped this position.} The distinction just drawn was
+learned rather than adopted on principle. Two loop runners originally wrote their
+generated code to the same filename pattern, so the second silently overwrote the
+first run's saved solutions; the overwrite was found by an integrity audit before
+submission and the affected configurations were re-run under collision-free names.
+On the fresh runs a substantially larger Maintainability-Index effect previously
+recorded for the comment-stripping configuration did not reproduce; it fell from roughly $-16$ points to the $-3.0$ reported here, and the strip-versus-preserve
+difference became non-significant. That figure and the ablation argument built on it
+were withdrawn, and the fresh runs adopted as canonical. The instability was
+specific to multi-step trajectories, which is why this thesis rests its conclusions
+on effect direction and significance rather than on precise magnitudes.
+
+\subsection{Future Work}
+
+The bounds above suggest the following directions, roughly in order of how directly
+they address a limitation identified here.
+
+\begin{itemize}
+  \item \textbf{Replicate across models.} Repeat the study on structurally messier
+    code generators to test whether the cognitive-complexity effect is a property of
+    the technique or of this model.
+  \item \textbf{Vary the prompt and pre-register.} Measure sensitivity to which
+    findings are shown and how the instruction is phrased---the factor held fixed
+    here---and fix the metric family, correction scheme, and iteration budget in
+    advance.
+  \item \textbf{Adopt a volume-controlled maintainability measure.} A metric that
+    does not conflate code size and comment density with structural quality would
+    give H1 an informative outcome variable instead of one at its ceiling.
+  \item \textbf{Add human raters.} Test whether the measured reductions correspond
+    to code developers find easier to read and change, and decompose the gate with a
+    silent-rollback condition.
+  \item \textbf{Scale beyond self-contained functions.} Apply the loop to
+    repository-level code, where maintainability matters most and the
+    single-function metrics used here are least adequate.
+\end{itemize}

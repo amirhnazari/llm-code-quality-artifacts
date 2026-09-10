@@ -1,0 +1,7 @@
+def recursive_list_sum(lst):
+    """Flatten a list and sum all of its elements."""
+    total = sum(recursive_list_sum(i) if isinstance(i, list) else i for i in lst)
+    return total
+
+# Test the function with the provided test case
+assert recursive_list_sum(([1, 2, [3,4],[5,6]]))==21

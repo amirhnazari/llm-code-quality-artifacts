@@ -1,0 +1,304 @@
+% !TeX root = ../paper.tex
+
+\section{Methodology}
+\label{sec:method}
+
+\subsection{Study Design}
+The study uses a quantitative, experimental design with paired measurements. For
+each task, a no-feedback baseline is compared against the same task after up to
+three static-analysis feedback iterations. Pairing each baseline with its
+refined counterpart controls for task-level difficulty.
+
+\subsection{Materials and Tools}
+The target language is Python. Generation uses
+\textbf{Qwen2.5-Coder-7B-Instruct}~\citep{qwen25coder}, an open-weight code model,
+served locally by Ollama~\citep{ollama} under the \texttt{qwen2.5-coder:7b} tag
+(Q4\_K\_M quantization), with temperature~0 and a fixed seed for reproducibility. This model was chosen
+deliberately: a mid-tier, open-weight code model is strong enough to give a
+meaningful correctness baseline yet still leaves structural headroom for the
+feedback loop to act on. Local hosting was chosen so
+that a pinned model, quantization, and seed make generation reproducible without
+provider drift and at no API cost. Each metric maps to one open-source tool, as
+summarized in \cref{tab:tooling}.
+
+\begin{table*}[t]
+  \centering
+  \caption{Metrics and the tools that produce them. Tools:
+    EvalPlus~\citep{evalplus_tool}, \texttt{radon}~\citep{radon_docs},
+    \texttt{complexipy}~\citep{complexipy_tool}, \texttt{pylint}~\citep{pylint_tool}.}
+  \label{tab:tooling}
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{Metric} & \textbf{Role} & \textbf{Tool} \\
+    \midrule
+    Functional correctness            & Primary (H3) & EvalPlus (MBPP+) \\
+    Maintainability Index             & Primary (H1) & \texttt{radon} \\
+    Cyclomatic complexity             & Primary (H2) & \texttt{radon} \\
+    Cognitive complexity              & Primary (H2) & \texttt{complexipy} \\
+    Halstead volume/effort            & Supplementary & \texttt{radon} \\
+    Lines of code (LOC)               & Supplementary / control & \texttt{radon} \\
+    Linter counts (R/W/C)             & Feedback source & \texttt{pylint} \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+\noindent Pylint is positioned strictly as a feedback mechanism, not as a primary
+scientific measure. Because the loop is shown its own Pylint findings, any later
+movement in those counts partly restates the input it was given, so they are
+reported as descriptive context only (\cref{sec:supp}). Results are stored as
+JSONL, one record per task and iteration, alongside the generated code.
+
+\subsection{Feedback Pipeline Architecture}
+% The supervisor noted the loop was previously under-explained. Each stage below
+% is described in one short step; the figure mirrors these stages 1:1.
+The pipeline runs one task at a time through the following stages
+(\cref{fig:pipeline}):
+\begin{enumerate}
+  \item \textbf{Generate.} The LLM receives the natural-language task prompt and
+    produces an initial Python solution.
+  \item \textbf{Check correctness.} The solution is executed against the MBPP+
+    inputs and its outputs are compared to the reference (canonical) solution used
+    as an oracle; the pass/fail outcome is recorded.
+  \item \textbf{Analyze.} The static-analysis tools parse the solution and emit
+    the metric values and specific violations.
+  \item \textbf{Format feedback.} The measured values and violations are rendered
+    into a structured feedback prompt, reproduced in full in \cref{fig:prompt}.
+  \item \textbf{Refine.} The LLM receives its previous code plus the feedback and
+    returns a refactored solution.
+\end{enumerate}
+All of this happens in the prompt. The model's weights are never updated: there is
+no fine-tuning and no gradient step, and the static-analysis tools are run by the
+pipeline rather than called by the model. ``Feedback'' throughout this thesis means
+tool output formatted into the next prompt, together with the model's previous
+code.
+
+Because that prompt is the study's intervention, it is given verbatim in
+\cref{fig:prompt} rather than paraphrased. The metric values shown there are
+illustrative; everything else is the exact template, and the three configurations
+of \cref{sec:configs} are defined by small, stated edits to it.
+
+\begin{figure}[t]
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,numbers=none,language=,
+                   frame=single,breaklines=true,columns=fullflexible]
+Your previous Python solution was:
+```python
+{previous solution}
+```
+
+A static-analysis tool reported the following on
+that solution:
+- Maintainability Index: 78.2 (0-100, higher is
+  better)
+- Cyclomatic complexity (total): 7 (independent
+  branches; lower is simpler)
+- Cognitive complexity (total): 12 (penalises
+  deep/nested control flow; lower is easier to
+  follow)
+- Pylint findings:
+    line 4: too-many-branches -- Too many
+    branches (14/12)
+
+Refactor only the internal logic of the function
+to reduce its cyclomatic and cognitive
+complexity: flatten nested loops and
+conditionals, remove redundant branches, and use
+clear idiomatic Python (comprehensions,
+built-ins, early returns) where it genuinely
+simplifies the control flow. Keep the EXACT same
+function signature (same name AND parameters)
+and the same behaviour. Keep any existing
+docstring and comments -- do not delete them.
+Original task:
+{task description}
+
+Respond with ONLY a Python code block.
+\end{lstlisting}
+\caption{The refactor prompt, verbatim, for the comment-preserving configuration.
+  Metric values are illustrative. The comment-stripping configuration omits the
+  final sentence of the instruction paragraph and is otherwise identical; the
+  correctness-guarded configuration uses this template unchanged and prepends a
+  rejection notice after a refused refactor; the code-blind variant drops the
+  previous solution and the line-anchored Pylint findings, keeping only the scalar
+  values.}
+\label{fig:prompt}
+\end{figure}
+
+Stages 2--5 repeat for \emph{up to three} iterations. The cap is a fixed budget set
+in advance: it gives the loop room to make successive improvements while keeping
+every run bounded, mutually comparable, and cheap to reproduce. The loop does not stop early on convergence; it always runs the full three
+iterations, so the number of refinements is identical across tasks and configurations. Correctness is
+re-checked on every iteration (Stage~2), so any refactor that breaks a test is
+detected immediately; how the loop then responds---carry the new version forward
+regardless, or reject it and roll back---is the one axis on which the
+configurations differ (\cref{sec:configs}).
+
+\begin{figure*}[t]
+  \centering
+  \begin{tikzpicture}[
+      node distance=10mm and 14mm,
+      box/.style={rectangle,draw,rounded corners,align=center,
+                  minimum height=9mm,minimum width=26mm,font=\small},
+      arr/.style={-{Stealth[length=2.5mm]}}]
+    \node[box] (gen)   {LLM generates\\Python code};
+    \node[box,right=of gen] (analyze) {Static analysis\\(radon, pylint)};
+    \node[box,right=of analyze] (feedback) {Format report\\as feedback prompt};
+    \node[box,below=of feedback] (refine) {LLM refines\\code};
+    \node[box,below=of gen] (test) {MBPP+ oracle\\correctness check};
+    \draw[arr] (gen) -- (analyze);
+    \draw[arr] (analyze) -- (feedback);
+    \draw[arr] (feedback) -- (refine);
+    \draw[arr] (refine) -- node[midway,above=0.5mm,font=\scriptsize]{up to 3$\times$} (test);
+    \draw[arr] (test) -- (gen);
+  \end{tikzpicture}
+  \caption{Iterative static-analysis feedback pipeline.}
+  \label{fig:pipeline}
+\end{figure*}
+
+\subsection{Task Set and Correctness Oracle}
+\label{sec:taskset}
+Tasks are drawn from the sanitized MBPP problems~\citep{austin2021mbpp} and are
+evaluated with MBPP+. EvalPlus~\citep{liu2023evalplus} is a framework that augments
+a benchmark with a substantially larger, automatically generated set of test
+inputs; the paper applies it to HumanEval and names MBPP as future work. MBPP+ is
+the result of that later application and is distributed with the EvalPlus tool,
+version~0.3.1~\citep{evalplus_tool}, which is the version used here. The augmented
+suite makes the correctness check considerably more rigorous than the handful of
+tests shipped with the original problems, and the size of that difference was
+measured directly on the task set used here: across the 63 tasks the benchmark's
+own inputs number 193, against 6519 added by the augmentation. To ensure every task offers
+structural headroom for the feedback loop to act on, tasks are filtered by an
+objective, reproducible criterion applied to their reference solution: cyclomatic
+complexity $\geq 3$ and $\geq 5$ lines of code, excluding tasks that require file
+or network input/output. The filter is applied to the full pool of 378 tasks
+distributed with the tool, is deterministic, and involves no sampling or manual
+selection step: it yields exactly \textbf{63 tasks}. Because the criterion is
+evaluated on the reference solutions, which are fixed properties of the benchmark,
+the task set was settled before any code was generated and never revised
+afterwards. These are stratified by the same
+reference-solution complexity into a \emph{lower} group (cyclomatic complexity
+3--4, $n=40$) and a \emph{higher} group (cyclomatic complexity $\geq 5$, $n=23$) so
+that the effect of the loop can be analyzed by difficulty. The strata are therefore
+a property of the benchmark tasks, fixed before any code was generated, and not of
+the model's own baseline output. Correctness is decided by an
+EvalPlus-style oracle: a solution passes only if, for every base and extended
+input, its output matches the canonical reference solution (with floating-point
+tolerance) and it raises no exception. The identical oracle is applied at every
+iteration, which is how the study checks that code still works after
+refinement: H3 is evaluated by comparing each task's baseline and final pass/fail
+outcome under exactly the same inputs, and the McNemar
+test~\citep{mcnemar1947} then operates on the
+resulting discordant pairs (\cref{sec:results}). Each candidate is executed in an
+isolated subprocess that is killed as a process group on timeout, with a second
+in-process alarm inside the harness, so a non-terminating solution is recorded as a
+failure rather than stalling the run.
+
+Because H3 rests entirely on this oracle, the oracle itself was checked rather than
+assumed. Submitting each task's own reference solution to it as though it were a
+candidate, all 63 pass; submitting a deliberately corrupted variant of each
+reference, all 63 fail. The augmented inputs also demonstrably discriminate: 40 of
+the 63 baseline solutions satisfy the benchmark's original inputs, but 12 of those
+are then caught by the augmentation, which is what reduces the baseline pass count
+to the 28 reported in \cref{sec:results}. Almost a fifth of the task set would
+therefore have been scored correct under the unaugmented benchmark.
+
+\subsection{Loop Configurations}
+\label{sec:configs}
+Three configurations of the feedback loop are compared against the shared
+baseline, all using the identical model, sampling parameters, task set, and
+iteration cap. They differ only in the feedback prompt and in the policy that
+decides which version is carried into the next iteration:
+\begin{itemize}
+  \item \textbf{Unguarded (comment-stripping).} The refactor prompt does not
+    instruct the model to preserve existing comments. The label describes the
+    observed outcome rather than the instruction: across the archived run the
+    comment and docstring lines in the generated solutions fall from 268 at the
+    baseline to 78 at the final iteration, against a rise to 324 under the
+    comment-preserving prompt. Contrasting the two configurations tests whether
+    comment handling affects the Maintainability Index.
+  \item \textbf{Unguarded (comment-preserving).} Identical to the above except for
+    one appended sentence instructing the model to keep any existing docstring and
+    comments. Every other element of the prompt, including the requirement to preserve the
+    exact function signature and behavior, is shared with the
+    comment-stripping configuration, which is what makes the pair a controlled
+    contrast. In both unguarded configurations the latest refactor is always
+    carried forward, even if it fails the correctness check.
+  \item \textbf{Correctness-guarded.} This configuration uses the
+    comment-preserving prompt, so it differs from the second configuration in its
+    carry-forward policy alone. The correctness check acts as a gate,
+    mirroring a continuous-integration quality gate; the same principle as the
+    fitness gate of Blyth et al.~\citep{blyth2025scam}, applied here to
+    structural-metric refactoring rather than to linter
+    violations. A refactor is accepted only
+    if it still passes the oracle; otherwise it is rejected and the loop rolls
+    back to the last accepted (still-correct) version, and the model is informed
+    on the next attempt that its change altered behavior. That notice is not
+    merely informative but structurally necessary: because decoding is greedy and
+    the seed is fixed, rolling back and re-prompting with a byte-identical prompt
+    would regenerate the same rejected refactor indefinitely. Adding the notice
+    perturbs the prompt, which is what allows a retry to differ from the attempt it
+    replaces. (The one exception is a
+    task the baseline never solved: while the carried-forward version is still
+    failing, any candidate is accepted, since correctness cannot regress below an already-failing baseline; this lets the loop repair such a task if it
+    can.)
+    By construction, final correctness can therefore never fall below the baseline.
+\end{itemize}
+
+A further comparison isolates the \emph{content} of the feedback rather than the
+carry-forward policy. In all three configurations above, the model is shown its own
+previous code together with the static-analysis findings. A \emph{code-blind}
+variant instead withholds the previous code and supplies only the scalar findings
+of the previous attempt---the Maintainability Index, the cyclomatic and cognitive
+complexity totals, and the Pylint issue counts by category---asking the model to
+generate a fresh, simpler solution to the same task. This tests whether the
+improvement is driven by the model editing its own code or merely by being told
+that its previous attempt was too complex. The code-blind variant is run in both an
+unguarded and a correctness-guarded form and is reported as a secondary ablation
+(\cref{sec:blind}).
+
+\subsection{Frozen Protocol}
+All generation parameters are fixed in a single version-controlled configuration
+file and applied unchanged to every run: model \texttt{qwen2.5-coder:7b}
+(Q4\_K\_M quantization), temperature~0, seed~42, a context window of 4096 tokens,
+and an iteration cap of three. Because the model is served locally with greedy
+decoding and a fixed seed, generations are not subject to provider drift, and the
+generated code and per-iteration metrics are retained for every task and
+iteration so that each reported value can be traced to the artifact that produced
+it.
+
+One limit on exact replication should be stated plainly: an Ollama tag identifies a
+model by name rather than by content, so a future pull of \texttt{qwen2.5-coder:7b}
+is not guaranteed to resolve to the same weights. The weights actually used are
+nonetheless pinned by digest. The identifier \texttt{ollama list} reports for the
+tag is \texttt{dae161e27b0e}, and the model layer it references is
+\texttt{sha256:60e05f21\ldots} at 4.68\,GB; both are recorded in the configuration
+file alongside the sampling parameters. These digests were read back from the local
+model store after the experiment rather than logged during it, so the supporting
+evidence that one set of weights served every run is that the manifest and the
+weight blob both carry an unmodified timestamp preceding the earliest run; the tag
+was pulled once and never re-pulled. A replication can therefore check that it
+loaded the same weights by comparing these digests against its own, which the tag
+alone would not allow.
+
+\subsection{Artifacts and What Is Reproducible}
+\label{sec:artifacts}
+Two different claims are often both called reproducibility, and only the first of
+them is exact here.
+
+\emph{Recomputation from the archived artifacts is exact.} Every solution the model
+produced is retained---1260 files across the five configurations, one per task and
+iteration---together with the metric values recorded for it at run time. Every
+number reported in this thesis is derived from those files by a deterministic
+analysis script, and re-measuring all 1260 archived solutions reproduces all of the
+recorded metric values exactly. A reader can therefore trace any reported figure to
+the specific solution that produced it, and can confirm the statistics offline
+without a model, a network connection, or an API key.
+
+\emph{Re-running generation is approximate.} Single-shot generation is
+deterministic: under greedy decoding with a fixed seed, the baseline iteration is
+byte-identical across all five configurations. A multi-step trajectory is not
+equally stable, because once any intermediate iteration differs the later ones can
+diverge from it. A fresh run of the loop should therefore be expected to reproduce
+the direction and rough magnitude of the effects reported here rather than the exact
+values, and the figures quoted throughout are properly read as measurements of the
+archived runs rather than as constants of the method. The consequences of this for
+the study's conclusions are taken up in \cref{sec:limitations}.

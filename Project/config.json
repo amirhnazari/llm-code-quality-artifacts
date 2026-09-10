@@ -1,0 +1,27 @@
+{
+  "model": "qwen2.5-coder:7b",
+  "quantization": "Q4_K_M",
+  "task_set": "mbpp",
+  "temperature": 0,
+  "seed": 42,
+  "num_ctx": 4096,
+  "max_iterations": 3,
+  "gen_timeout": 300,
+  "test_timeout": 30,
+
+  "_note": "Pinned config for reproducibility. The runners read only the keys above; everything under _provenance is documentation.",
+
+  "_provenance": {
+    "ollama_client_version": "0.30.10",
+    "model_id": "dae161e27b0e",
+    "model_id_full": "sha256:dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+    "model_id_meaning": "The ID 'ollama list' prints for this tag. It is the SHA-256 of the local manifest file at ~/.ollama/models/manifests/registry.ollama.ai/library/qwen2.5-coder/7b.",
+    "weights_layer_digest": "sha256:60e05f2100071479f596b964f89f510f057ce397ea22f2833a0cfe029bfc2463",
+    "weights_layer_bytes": 4683074048,
+    "pulled_at": "2026-06-23T15:00:00 (local mtime of both the manifest and the weights blob)",
+    "first_run_at": "2026-06-23T18:40 (results/baseline.jsonl)",
+    "last_run_at": "2026-07-23T21:38 (results/feedback_v3_fresh.jsonl)",
+    "_how_recovered": "Read back from the local Ollama store AFTER the experiment, not logged at run time. Supporting evidence that every run used these weights: the manifest and the weights blob both carry an unmodified mtime of 2026-06-23 15:00, which precedes the earliest run, so the tag was pulled once and never re-pulled.",
+    "_what_this_does_and_does_not_establish": "A replication can check it loaded the same weights by comparing the digests above against its own 'ollama list' / manifest. It does NOT guarantee that pulling 'qwen2.5-coder:7b' in future resolves to this digest -- an Ollama tag names a model rather than fixing its content, and the registry may re-tag."
+  }
+}

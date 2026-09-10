@@ -1,0 +1,39 @@
+% !TeX root = ../paper.tex
+
+\section{Conclusion and Outlook}
+\label{sec:conclusion}
+
+This thesis asked whether iterative static-analysis feedback can improve the
+maintainability of LLM-generated Python without reducing functional correctness.
+Across three loop configurations run on 63 MBPP+ tasks with a locally hosted
+Qwen2.5-Coder-7B-Instruct model, the answer is a qualified yes. The loop yields a
+statistically significant reduction in cognitive complexity, concentrated on the
+tasks that have structural headroom, and it does so without a statistically
+significant loss of correctness. The correctness-guarded configuration, which
+treats the test suite as a continuous-integration quality gate, strengthens this
+into a guarantee: it eliminates every correctness regression while retaining the
+complexity benefit.
+
+The study also delivers a cautionary methodological result. The Maintainability
+Index does not improve and in fact declines slightly under every configuration, by
+a similar amount whether or not comments are stripped. Because the baseline already
+sits near the metric's ceiling and the Index conflates code size and comments with
+structural quality~\citep{heitlager2007maintainability}, this decline is best read as evidence that the
+Maintainability Index is an unsuitable outcome metric for this kind of
+experiment rather than as a genuine loss of maintainability. Cognitive complexity
+is the more informative signal, and it is the metric on which the qualified-yes
+answer rests.
+
+The results are bounded by a single model, a single seed, one decoding
+configuration, and short benchmark tasks; the correctness test has limited
+statistical power; and the reported magnitudes describe archived runs rather than
+values a fresh execution will reproduce exactly. \Cref{sec:limitations} sets out
+these bounds in full and derives the corresponding future work, of which the most
+direct are replication across models, a volume-controlled maintainability measure,
+human readability assessment, and a systematic study of how much the effect depends
+on the wording of the feedback prompt.
+
+What the study can offer in exchange for those bounds is traceability. Every
+generated solution is retained with the measurements taken from it, and each figure
+reported here can be recomputed from those artifacts, so the claims are open to
+inspection at the level of the individual task rather than only in aggregate.

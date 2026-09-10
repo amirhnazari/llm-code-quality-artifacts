@@ -1,0 +1,86 @@
+% Tool / software sources -- NOT compiled by BibTeX.
+%
+% The supervisor asked for a separation of Fachliteratur from URLs/tools
+% (email, Sep 2026). These five entries therefore no longer appear in
+% references.bib; they are rendered by hand in sections/tools.tex as a separate
+% "Tools and Software" list that continues the main numbering.
+%
+% THIS FILE IS THE SOURCE OF TRUTH FOR THEIR METADATA. If anything here changes,
+% update the matching \bibitem in sections/tools.tex by hand -- BibTeX no longer
+% does it for you. The rendered text there was produced by IEEEtran from these
+% exact entries, so the formatting already matches the main bibliography.
+%
+% scripts/check-citations.sh parses this file too, so key hygiene and the
+% "cited but not defined" check still cover these entries.
+
+% Documentation for the radon implementation actually used. VERIFIED twice: the
+% page documents MI = max[0, 100(171 - 5.2 ln V - 0.23 G - 16.2 ln L
+% + 50 sin(sqrt(2.4 C)))/171], and the installed source agrees --- radon 6.0.1
+% metrics.py mi_compute() returns min(max(0, nn_mi * 100/171), 100). Author and
+% release date verified against the PyPI JSON API (6.0.1 uploaded 2023-03-26).
+% LOYAL USE: cite ONLY for the normalized 0-100 derivative. The underlying
+% four-component formula belongs to Coleman et al. --- do not merge the two.
+% NOTE: this derivative converts the comment percentage to radians before the
+% sine (math.radians in mi_compute), an implementation quirk of radon, not of
+% the original MI. The docs page also calls MI "still a very experimental metric"
+% --- available as extra support for the thesis's MI critique if ever needed.
+@misc{radon_docs,
+  author = {Lacchia, Michele},
+  title  = {Radon documentation: introduction to code metrics},
+  note   = {Software documentation, version 6.0.1, released 2023-03-26},
+  url    = {https://radon.readthedocs.io/en/v6.0.1/intro.html},
+  year   = {2023}
+}
+
+% Cognitive complexity tool. Implements Campbell's metric (see cognitivecomplexity)
+% for Python. Version verified against Project/.venv.
+@misc{complexipy_tool,
+  author = {Quintero, Robin Hafid},
+  title  = {Complexipy: an extremely fast {Python} library to calculate the cognitive complexity of {Python} files},
+  note   = {Software, version 5.6.1, released 2026-06-16},
+  url    = {https://github.com/rohaquinlop/complexipy},
+  year   = {2026}
+}
+
+% Linter used as the feedback source (not as a primary measure --- see the
+% methodology). Version verified against Project/.venv.
+% YEAR CORRECTED 2026 -> 2025: 3.3.9 was released 2025-10-05 (GitHub tag v3.3.9
+% published 2025-10-05T18:37Z; PyPI upload 2025-10-05T18:41Z). The year field is
+% the version's release year, not the access date --- the access date lives in
+% the note. Same convention as evalplus_tool and radon_docs. The other three
+% software entries were re-checked at the same time and are correct as they
+% stand: complexipy 5.6.1 -> 2026-06-16, ollama 0.30.10 -> 2026-06-17,
+% radon 6.0.1 -> 2023-03-26.
+@misc{pylint_tool,
+  author = {{Pylint contributors}},
+  title  = {Pylint: a static code analyser for {Python}},
+  note   = {Software, version 3.3.9, released 2025-10-05},
+  url    = {https://github.com/pylint-dev/pylint},
+  year   = {2025}
+}
+
+% Software citation for the EvalPlus tool that provides the MBPP+ test suite used
+% here (v0.3.1). Repo URL is VERIFIED --- printed in the abstract of NEURIPS2023.pdf.
+% MBPP+ ships with the tool, not the paper, so this is the loyal source for it.
+% YEAR CORRECTED 2023 -> 2024: v0.3.1 was released 2024-10-20 (verified against the
+% GitHub releases API; cross-checked against the evalplus 0.3.1 package installed in
+% Project/.venv). MBPP+ itself first shipped in v0.2.0 (2023-11-24), whose release
+% notes state the 35x test augmentation (avg 3.1 -> 108.5 tests).
+@misc{evalplus_tool,
+  author = {Liu, Jiawei and Xia, Chunqiu Steven and Wang, Yuyao and Zhang, Lingming},
+  title  = {{EvalPlus}: rigorous evaluation of {LLM}-synthesized code},
+  note   = {Software, version 0.3.1, released 2024-10-20; provides the {MBPP+} test suite},
+  url    = {https://github.com/evalplus/evalplus/releases/tag/v0.3.1},
+  year   = {2024}
+}
+
+% The local serving runtime. Version is the client reported on this machine; the
+% server version at experiment time was not recorded (see the Frozen Protocol
+% limitation in the methodology).
+@misc{ollama,
+  author = {{Ollama}},
+  title  = {Ollama: get up and running with large language models locally},
+  note   = {Software, client version 0.30.10, released 2026-06-17},
+  url    = {https://github.com/ollama/ollama},
+  year   = {2026}
+}
